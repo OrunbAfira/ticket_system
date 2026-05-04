@@ -1,10 +1,3 @@
-/**
- * Configurações e constantes globais do Sistema de Ingressos
- * 
- * Desenvolvido por: Bruno
- * Versão: 1.0.0
- */
-
 package com.mycompany.ingressos1;
 
 public class AppConfig {
