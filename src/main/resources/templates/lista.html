@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Ingressos</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <div class="container">
+
+        <h1>Ingressos Cadastrados</h1>
+
+        <div class="top-actions">
+            <a href="/ingressos/novo" class="btn">Comprar novo ingresso</a>
+            <a href="/" class="btn">Início</a>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Evento</th>
+                    <th>Cliente</th>
+                    <th>Tipo</th>
+                    <th>Valor Final</th>
+                    <th>Estado</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr th:each="ingresso : ${ingressos}">
+                    <td th:text="${ingresso.nomeEvento}"></td>
+                    <td th:text="${ingresso.nomeCliente}"></td>
+                    <td th:text="${ingresso.tipoIngresso}"></td>
+                    <td th:text="${'R$ ' + ingresso.valorFinal}"></td>
+                    <td th:text="${ingresso.estado}"></td>
+                    <td class="actions">
+                        <a th:href="@{/ingressos/{id}(id=${ingresso.id})}" class="btn">Detalhes</a>
+                        <a th:href="@{/ingressos/pagar/{id}(id=${ingresso.id})}" class="btn">Pagar</a>
+                        <a th:href="@{/ingressos/utilizar/{id}(id=${ingresso.id})}" class="btn">Utilizar</a>
+                        <a th:href="@{/ingressos/cancelar/{id}(id=${ingresso.id})}" class="btn">Cancelar</a>
+                        <a th:href="@{/ingressos/deletar/{id}(id=${ingresso.id})}" class="btn btn-danger">Excluir</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+</body>
+</html>

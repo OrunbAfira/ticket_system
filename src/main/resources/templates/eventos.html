@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Eventos Disponíveis</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Eventos Disponíveis</h1>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Evento</th>
+            <th>Data</th>
+            <th>Local</th>
+            <th>Valor Base</th>
+            <th>Ação</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="evento : ${eventos}">
+            <td th:text="${evento.nome}"></td>
+            <td th:text="${evento.data}"></td>
+            <td th:text="${evento.local}"></td>
+            <td th:text="${'R$ ' + evento.valorBase}"></td>
+            <td>
+                <a class="btn" th:href="@{/eventos/comprar/{id}(id=${evento.id})}">Comprar</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <br>
+    <a href="/login" class="btn">Sair</a>
+</div>
+
+</body>
+</html>

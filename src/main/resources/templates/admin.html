@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel Admin</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <div class="container">
+
+        <h1>Painel do Administrador</h1>
+
+        <div class="top-actions">
+            <a href="/admin/novo" class="btn">Cadastrar novo evento</a>
+            <a href="/login" class="btn">Sair</a>
+        </div>
+
+        <h2>Eventos Cadastrados</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Data</th>
+                    <th>Local</th>
+                    <th>Valor Base</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr th:each="evento : ${eventos}">
+                    <td th:text="${evento.nome}"></td>
+                    <td th:text="${evento.data}"></td>
+                    <td th:text="${evento.local}"></td>
+                    <td th:text="${'R$ ' + evento.valorBase}"></td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+</body>
+</html>

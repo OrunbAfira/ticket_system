@@ -1,0 +1,84 @@
+================================================================================
+  Sistema de Ingressos para Eventos
+  Desenvolvido por: Bruno
+  Versão: 1.0.0
+  Ano: 2024-2026
+================================================================================
+
+BEM-VINDO AO PROJETO!
+
+Este é um projeto completo e profissional de gerenciamento de eventos 
+e vendas de ingressos desenvolvido com Java, Spring Boot e MongoDB.
+
+QUICK START:
+============
+
+1. Certifique-se que MongoDB está rodando:
+   mongod
+
+2. Compile o projeto:
+   mvn clean install
+
+3. Execute a aplicação:
+   mvn spring-boot:run
+
+4. Acesse no navegador:
+   http://localhost:8080
+
+5. Faça login:
+   Usuário: admin
+   Senha: admin
+
+ESTRUTURA:
+==========
+
+src/main/java/com/mycompany/ingressos1/
+  - Ingressos1.java (classe principal)
+  - controller/ (3 controladores)
+  - model/ (7+ modelos)
+  - service/ (3 serviços)
+  - repository/ (3 repositórios)
+  - AppConfig.java (configurações)
+
+FUNCIONALIDADES:
+================
+
+- Autenticação com 2 perfis (ADMIN e USER)
+- CRUD completo de eventos
+- Sistema de venda de ingressos
+- Cálculo automático de preços
+- Dashboard administrativo
+- Geração de ingressos para impressão
+- Persistência em MongoDB
+
+PADRÕES:
+========
+
+- MVC (Model-View-Controller)
+- Template Method Pattern
+- Dependency Injection
+- Repository Pattern
+- Service Layer Pattern
+
+DOCUMENTAÇÃO:
+=============
+
+- README.md - Visão geral do projeto
+- AUTHOR.md - Informações de autoria
+- ARCHITECTURE.md - Arquitetura detalhada
+- INSTALLATION.md - Guia de instalação completo
+- VERSION.md - Informações de versão
+
+DESENVOLVIDO COM:
+==================
+
+✓ Java 17
+✓ Spring Boot 3.3.5
+✓ MongoDB
+✓ Thymeleaf
+✓ Maven
+
+================================================================================
+Projeto desenvolvido integralmente por Bruno em 2024
+Última atualização: Maio de 2026
+================================================================================

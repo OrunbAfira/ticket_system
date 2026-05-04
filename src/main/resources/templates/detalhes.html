@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalhes do Ingresso</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <div class="container">
+
+        <h1>Detalhes do Ingresso</h1>
+
+        <div th:if="${ingresso != null}" class="card">
+
+            <p><strong>Evento:</strong> <span th:text="${ingresso.nomeEvento}"></span></p>
+            <p><strong>Cliente:</strong> <span th:text="${ingresso.nomeCliente}"></span></p>
+            <p><strong>Data:</strong> <span th:text="${ingresso.dataEvento}"></span></p>
+            <p><strong>Tipo:</strong> <span th:text="${ingresso.tipoIngresso}"></span></p>
+            <p><strong>Valor Base:</strong> R$ <span th:text="${ingresso.valorBase}"></span></p>
+            <p><strong>Valor Final:</strong> R$ <span th:text="${ingresso.valorFinal}"></span></p>
+            <p><strong>Estado:</strong> <span th:text="${ingresso.estado}"></span></p>
+
+            <hr>
+
+            <h3>Impressão do ingresso:</h3>
+            <p th:text="${ingresso.imprimirIngresso}"></p>
+
+        </div>
+
+        <div th:if="${ingresso == null}">
+            <p class="erro">Ingresso não encontrado.</p>
+        </div>
+
+        <br>
+
+        <a href="/ingressos" class="btn">Voltar</a>
+
+    </div>
+
+</body>
+</html>

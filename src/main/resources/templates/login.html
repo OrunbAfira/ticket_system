@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <div class="container">
+
+        <h1>Login</h1>
+
+        <div class="card">
+
+            <form action="/login" method="post">
+
+                <label>Usuário:</label>
+                <input type="text" name="login" placeholder="Digite seu usuário" required>
+
+                <label>Senha:</label>
+                <input type="password" name="senha" placeholder="Digite sua senha" required>
+
+                <button class="btn" type="submit">Entrar</button>
+            </form>
+
+            <p th:if="${erro}" th:text="${erro}" class="erro"></p>
+
+        </div>
+
+        <br>
+
+        <div style="text-align: center;">
+            <a href="/cadastro-usuario">Criar conta</a>
+        </div>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Comprar Ingresso</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <div class="container">
+
+        <h1>Comprar Ingresso</h1>
+
+        <form action="/ingressos/salvar" method="post">
+
+            <label>Tipo de ingresso:</label>
+            <select name="tipo" required>
+                <option value="NORMAL">Normal</option>
+                <option value="VIP">VIP</option>
+                <option value="MEIA">Meia-entrada</option>
+            </select>
+
+            <label>Nome do evento:</label>
+            <input type="text" name="nomeEvento" required>
+
+            <label>Nome do cliente:</label>
+            <input type="text" name="nomeCliente" required>
+
+            <label>Data do evento:</label>
+            <input type="date" name="dataEvento" required>
+
+            <label>Valor base:</label>
+            <input type="number" name="valorBase" step="0.01" required>
+
+            <button class="btn" type="submit">Comprar</button>
+        </form>
+
+        <br>
+
+        <a href="/">Voltar</a>
+
+    </div>
+
+</body>
+</html>

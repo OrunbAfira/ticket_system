@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Imprimir Ingresso</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Ingresso Pago</h1>
+
+    <div class="card" th:if="${ingresso != null}">
+        <h2>Comprovante / Impressão do Ingresso</h2>
+
+        <p><strong>Evento:</strong> <span th:text="${ingresso.nomeEvento}"></span></p>
+        <p><strong>Cliente:</strong> <span th:text="${ingresso.nomeCliente}"></span></p>
+        <p><strong>Data:</strong> <span th:text="${ingresso.dataEvento}"></span></p>
+        <p><strong>Tipo:</strong> <span th:text="${ingresso.tipoIngresso}"></span></p>
+        <p><strong>Valor Final:</strong> R$ <span th:text="${ingresso.valorFinal}"></span></p>
+        <p><strong>Estado:</strong> <span th:text="${ingresso.estado}"></span></p>
+
+        <hr>
+
+        <h3>Ingresso:</h3>
+        <p th:text="${ingresso.imprimirIngresso}"></p>
+
+        <br>
+
+        <button class="btn" onclick="window.print()">Imprimir</button>
+    </div>
+
+    <div th:if="${ingresso == null}">
+        <p class="erro">Ingresso não encontrado.</p>
+    </div>
+
+    <br>
+
+    <a href="/ingressos" class="btn">Meus Ingressos</a>
+    <a href="/eventos" class="btn">Comprar outro</a>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastrar Evento</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <div class="container">
+
+        <h1>Cadastrar Evento</h1>
+
+        <form action="/admin/salvar" method="post">
+
+            <label>Nome do evento:</label>
+            <input type="text" name="nome" required>
+
+            <label>Data:</label>
+            <input type="date" name="data" required>
+
+            <label>Local:</label>
+            <input type="text" name="local" required>
+
+            <label>Valor base:</label>
+            <input type="number" name="valorBase" step="0.01" required>
+
+            <button class="btn" type="submit">Salvar Evento</button>
+        </form>
+
+        <br>
+
+        <a href="/admin">Voltar</a>
+
+    </div>
+
+</body>
+</html>
