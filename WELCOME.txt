@@ -1,8 +1,11 @@
 ================================================================================
-  Sistema de Ingressos para Eventos
-  Desenvolvido por: Bruno
+  🎫 SISTEMA DE INGRESSOS PARA EVENTOS 🎫
+  
+  Desenvolvido por: Bruno (OrunbAfira)
+  GitHub: https://github.com/OrunbAfira/ticket_system
   Versão: 1.0.0
   Ano: 2024-2026
+  Status: ✅ Completo e Funcional
 ================================================================================
 
 BEM-VINDO AO PROJETO!
@@ -16,18 +19,28 @@ QUICK START:
 1. Certifique-se que MongoDB está rodando:
    mongod
 
-2. Compile o projeto:
+2. Clone o repositório (se ainda não clonou):
+   git clone https://github.com/OrunbAfira/ticket_system.git
+
+3. Compile o projeto:
    mvn clean install
 
-3. Execute a aplicação:
+4. Execute a aplicação:
    mvn spring-boot:run
 
-4. Acesse no navegador:
+5. Acesse no navegador:
    http://localhost:8080
 
-5. Faça login:
+6. Faça login:
    Usuário: admin
    Senha: admin
+
+DATABASE:
+=========
+O banco de dados MongoDB está pré-configurado para:
+- Host: MongoDB Atlas
+- Database: ingressos_db
+- Credenciais: Salvas em application.properties
 
 ESTRUTURA:
 ==========

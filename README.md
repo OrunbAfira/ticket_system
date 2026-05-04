@@ -1,7 +1,11 @@
-# Sistema de Ingressos para Eventos
+# 🎫 Sistema de Ingressos para Eventos
 
-Plataforma web para gerenciamento de eventos e vendas de ingressos desenvolvida com **Java 17 + Spring Boot 3.3.5 + MongoDB**
----
+[![GitHub](https://img.shields.io/badge/GitHub-OrunbAfira%2Fticket__system-blue?style=flat-square&logo=github)](https://github.com/OrunbAfira/ticket_system)
+[![Java](https://img.shields.io/badge/Java-17-orange?style=flat-square)](https://www.java.com)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.5-green?style=flat-square)](https://spring.io/projects/spring-boot)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-brightgreen?style=flat-square)](https://www.mongodb.com)
+
+Plataforma web completa para gerenciamento de eventos e vendas de ingressos desenvolvida com **Java 17 + Spring Boot 3.3.5 + MongoDB**
 
 ## Conteúdo
 
@@ -67,10 +71,13 @@ mongod
 
 ### 3. Configurar application.properties
 ```properties
-spring.data.mongodb.uri=mongodb://localhost:27017/ingressos
-spring.data.mongodb.database=ingressos
+# MongoDB Atlas Configuration
+spring.data.mongodb.uri=mongodb+srv://brunoassisfaria_db_user:dzVbOlx96CGd8mVW@cluster0.d2ugsqv.mongodb.net/ingressos_db?retryWrites=true&w=majority
+spring.application.name=Ingressos1
 server.port=8080
 ```
+
+> **Nota:** As credenciais já estão configuradas no repositório
 
 ### 4. Executar
 ```bash

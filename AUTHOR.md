@@ -1,10 +1,12 @@
 # Informações de Autoria
 
-## Desenvolvedor
+## Desenvolvedor Principal
 
-**Nome:** Bruno  
+**Nome:** Bruno (OrunbAfira)  
 **Versão:** 1.0.0  
 **Período:** 2024 - Maio de 2026  
+**GitHub:** [@OrunbAfira](https://github.com/OrunbAfira)  
+**Repositório:** [ticket_system](https://github.com/OrunbAfira/ticket_system)  
 
 ---
 
