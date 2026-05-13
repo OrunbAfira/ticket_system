@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erro - Sistema de Ingressos</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">Ingressos Pro</a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN -->
+    <main>
+        <div class="container" style="max-width: 600px; text-align: center;">
+            <h1 style="color: var(--danger-color); font-size: 3rem;">Oops!</h1>
+
+            <div class="card erro" style="margin: 2rem 0;">
+                <h2>Algo deu errado</h2>
+                <p th:if="${erro}" th:text="${erro}"></p>
+                <p th:if="${detalhes}" style="font-size: 0.9rem; color: #6b7280; margin-top: 1rem;" th:text="'Tipo: ' + ${detalhes}"></p>
+            </div>
+
+            <div style="background: var(--light); padding: 1.5rem; border-radius: 0.75rem; margin: 2rem 0;">
+                <h3>O que você pode fazer?</h3>
+                <ul style="text-align: left; list-style: none; padding: 0;">
+                    <li style="margin: 0.75rem 0;">Voltar à <a href="/">página inicial</a></li>
+                    <li style="margin: 0.75rem 0;">Fazer <a href="/login">login</a> novamente</li>
+                    <li style="margin: 0.75rem 0;">Ver <a href="/eventos">eventos disponíveis</a></li>
+                    <li style="margin: 0.75rem 0;">Contactar suporte se o problema persistir</li>
+                </ul>
+            </div>
+
+            <div class="btn-group" style="justify-content: center;">
+                <a href="/" class="btn">Voltar ao Início</a>
+                <a href="javascript:history.back()" class="btn btn-secondary">Voltar</a>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2024 Sistema de Ingressos para Eventos</p>
+    </footer>
+
+</body>
+</html>

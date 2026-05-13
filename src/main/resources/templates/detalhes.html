@@ -2,41 +2,104 @@
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Detalhes do Ingresso</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Ingresso - Sistema de Ingressos</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
-    <div class="container">
+    <!-- NAVBAR -->
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">Ingressos Pro</a>
+            <div class="nav-links">
+                <a href="/eventos">Eventos</a>
+                <a href="/ingressos">Meus Ingressos</a>
+                <form action="/logout" method="post" style="display: inline;">
+                    <button class="logout-btn" type="submit">Sair</button>
+                </form>
+            </div>
+        </div>
+    </nav>
 
-        <h1>Detalhes do Ingresso</h1>
+    <!-- MAIN -->
+    <main>
+        <div class="container" style="max-width: 600px;">
+            <h1>Detalhes do Ingresso</h1>
 
-        <div th:if="${ingresso != null}" class="card">
+            <div th:if="${ingresso != null}" class="card">
+                <div style="background: var(--light); padding: 1.5rem; border-radius: 0.75rem;">
+                    <p><strong>Evento:</strong> <span th:text="${ingresso.nomeEvento}"></span></p>
+                    <p><strong>Cliente:</strong> <span th:text="${ingresso.nomeCliente}"></span></p>
+                    <p><strong>Data:</strong> <span th:text="${ingresso.dataEvento}"></span></p>
+                    <p><strong>Tipo:</strong> <span th:text="${ingresso.tipoIngresso}"></span></p>
+                </div>
 
-            <p><strong>Evento:</strong> <span th:text="${ingresso.nomeEvento}"></span></p>
-            <p><strong>Cliente:</strong> <span th:text="${ingresso.nomeCliente}"></span></p>
-            <p><strong>Data:</strong> <span th:text="${ingresso.dataEvento}"></span></p>
-            <p><strong>Tipo:</strong> <span th:text="${ingresso.tipoIngresso}"></span></p>
-            <p><strong>Valor Base:</strong> R$ <span th:text="${ingresso.valorBase}"></span></p>
-            <p><strong>Valor Final:</strong> R$ <span th:text="${ingresso.valorFinal}"></span></p>
-            <p><strong>Estado:</strong> <span th:text="${ingresso.estado}"></span></p>
+                <div class="divider"></div>
 
-            <hr>
+                <div style="background: var(--primary-light); padding: 1.5rem; border-radius: 0.75rem; border-left: 4px solid var(--primary-color);">
+                    <p><strong>Valor Base:</strong> R$ <span th:text="${ingresso.valorBase}"></span></p>
+                    <p><strong>Valor Final:</strong> <strong style="color: var(--primary-color); font-size: 1.2rem;">R$ <span th:text="${ingresso.valorFinal}"></span></strong></p>
+                </div>
 
-            <h3>Impressão do ingresso:</h3>
-            <p th:text="${ingresso.imprimirIngresso}"></p>
+                <div style="margin-top: 1.5rem;">
+                    <p><strong>Estado:</strong> 
+                        <span th:if="${ingresso.estado == 'RESERVADO'}" class="text-warning">Reservado (aguardando pagamento)</span>
+                        <span th:if="${ingresso.estado == 'PAGO'}" class="text-success">Pago</span>
+                        <span th:if="${ingresso.estado == 'UTILIZADO'}" class="text-muted">Utilizado</span>
+                        <span th:if="${ingresso.estado == 'CANCELADO'}" class="text-danger">Cancelado</span>
+                    </p>
+                </div>
+
+                <div class="divider"></div>
+
+                <div th:if="${ingresso.imprimirIngresso}" class="card" style="background: #f0f9ff; border: 2px dashed var(--primary-color);">
+                    <h3>Seu Ingresso:</h3>
+                    <p th:text="${ingresso.imprimirIngresso}"></p>
+                </div>
+
+                <div style="background: #fef3c7; padding: 1.5rem; border-radius: 0.75rem; border: 2px solid var(--secondary-color); margin-top: 1.5rem;">
+                    <p style="margin: 0 0 0.5rem 0; color: #666; font-size: 0.85rem; text-transform: uppercase; font-weight: 600;">Código de Validação</p>
+                    <p style="margin: 0; font-family: 'Courier New', monospace; font-size: 1.2rem; font-weight: bold; letter-spacing: 2px; word-break: break-all;" th:text="${ingresso.hashIdCurto}"></p>
+                </div>
+
+                <!-- QR Code -->
+                <div style="background: white; padding: 1.5rem; border-radius: 0.75rem; border: 2px solid #ddd; margin-top: 1.5rem; text-align: center;">
+                    <p style="margin: 0 0 1rem 0; color: #666; font-size: 0.85rem; text-transform: uppercase; font-weight: 600;">Código QR (Validação)</p>
+                    <img th:src="@{/api/qrcode/{id}(id=${ingresso.hashId}, size=250)}" 
+                         alt="QR Code do Ingresso" 
+                         style="width: 250px; height: 250px; border: 1px solid #ddd; border-radius: 4px;"/>
+                    <p style="margin: 1rem 0 0 0; color: #666; font-size: 0.8rem;">Escaneie este código para validar o ingresso na entrada</p>
+                </div>
+
+                <div style="background: #f3f4f6; padding: 1rem; border-radius: 0.75rem; margin-top: 1rem;">
+                    <p style="margin: 0; color: #666; font-size: 0.8rem;">
+                        <strong>ID Completo do Ingresso (Hash):</strong><br/>
+                        <span style="font-family: 'Courier New', monospace; font-size: 0.7rem; word-break: break-all;" th:text="${ingresso.hashId}"></span>
+                    </p>
+                </div>
+
+            </div>
+
+            <div th:if="${ingresso == null}" class="card erro">
+                <p>Ingresso não encontrado.</p>
+            </div>
+
+            <div class="btn-group">
+                <a href="/ingressos" class="btn">← Voltar</a>
+                <a th:if="${ingresso.estado == 'RESERVADO'}" th:href="@{/ingressos/pagar/{id}(id=${ingresso.id})}" class="btn btn-success">Pagar Ingresso</a>
+                <span th:if="${ingresso.estado == 'PAGO'}" class="btn btn-success" style="opacity: 0.6; cursor: not-allowed; border: none;">Ingresso Pago</span>
+                <span th:if="${ingresso.estado == 'UTILIZADO'}" class="btn btn-muted" style="opacity: 0.6; cursor: not-allowed; border: none; background: #999;">Já Utilizado</span>
+                <span th:if="${ingresso.estado == 'CANCELADO'}" class="btn btn-danger" style="opacity: 0.6; cursor: not-allowed; border: none;">Cancelado</span>
+            </div>
 
         </div>
+    </main>
 
-        <div th:if="${ingresso == null}">
-            <p class="erro">Ingresso não encontrado.</p>
-        </div>
-
-        <br>
-
-        <a href="/ingressos" class="btn">Voltar</a>
-
-    </div>
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2024 Sistema de Ingressos para Eventos</p>
+    </footer>
 
 </body>
 </html>

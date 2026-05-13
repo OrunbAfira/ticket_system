@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventos Filtrados - Sistema de Ingressos</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .filtro-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            color: white;
+        }
+
+        .filtro-header h1 {
+            margin: 0;
+        }
+
+        .filtro-header p {
+            margin: 0.5rem 0 0 0;
+            opacity: 0.9;
+        }
+
+        .eventos-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .evento-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .evento-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+
+        .evento-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 1.5rem;
+            color: white;
+        }
+
+        .evento-header h3 {
+            margin: 0;
+            font-size: 1.3rem;
+        }
+
+        .evento-body {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .evento-info {
+            margin-bottom: 0.75rem;
+        }
+
+        .evento-info label {
+            font-weight: 600;
+            color: var(--dark);
+            display: block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #666;
+            margin-bottom: 0.2rem;
+        }
+
+        .evento-info p {
+            margin: 0;
+            color: var(--dark);
+            font-size: 0.95rem;
+        }
+
+        .evento-preco {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--success-color);
+            margin: 0.75rem 0;
+        }
+
+        .evento-descricao {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+            flex-grow: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .evento-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .evento-footer a {
+            flex: 1;
+            padding: 0.6rem;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-detalhes {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-detalhes:hover {
+            background: darken(var(--primary-color), 10%);
+        }
+
+        .btn-comprar {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-comprar:hover {
+            background: darken(var(--success-color), 10%);
+        }
+
+        .btn-comprar.desabilitado {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .vazio {
+            text-align: center;
+            padding: 3rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .vazio h2 {
+            color: #999;
+            margin-top: 0;
+        }
+
+        .vazio p {
+            color: #666;
+            margin: 0.5rem 0;
+        }
+
+        .vazio a {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .vazio a:hover {
+            background: darken(var(--primary-color), 10%);
+        }
+
+        .filtro-info {
+            background: rgba(37, 99, 235, 0.1);
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .filtro-info p {
+            margin: 0;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .eventos-container {
+                grid-template-columns: 1fr;
+            }
+
+            .evento-footer {
+                flex-direction: column;
+            }
+
+            .evento-footer a {
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">Ingressos Pro</a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/catalogo" class="active">Catalogo</a>
+                <a href="/login">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Cabeçalho do Filtro -->
+        <div class="filtro-header">
+            <h1 th:text="${filtro}">Eventos Filtrados</h1>
+            <p>Resultado da busca aplicada</p>
+        </div>
+
+        <!-- Informação do Filtro -->
+        <div class="filtro-info" th:if="${eventos.size() > 0}">
+            <p th:text="'Encontrados ' + ${eventos.size()} + ' evento(s)'"></p>
+        </div>
+
+        <!-- Lista de Eventos -->
+        <div class="eventos-container" th:if="${eventos.size() > 0}">
+            <div class="evento-card" th:each="evento : ${eventos}">
+                <div class="evento-header">
+                    <h3 th:text="${evento.nome}">Nome do Evento</h3>
+                </div>
+
+                <div class="evento-body">
+                    <p class="evento-descricao" th:text="${evento.descricao}">Descrição breve</p>
+
+                    <div class="evento-info">
+                        <label>Data e Horário</label>
+                        <p th:text="${evento.getDataHoraFormatada()}">Data e hora</p>
+                    </div>
+
+                    <div class="evento-info">
+                        <label>Local</label>
+                        <p th:text="${evento.local}">Local</p>
+                    </div>
+
+                    <div class="evento-preco">
+                        R$ <span th:text="${#numbers.formatDecimal(evento.valorIngresso, 1, 'COMMA', 2, 'POINT')}">0,00</span>
+                    </div>
+
+                    <div class="evento-info" th:if="${evento.temIngressosDisponiveis()}">
+                        <label>Ingressos Disponíveis</label>
+                        <p th:text="${evento.getIngressosRestantes()} + ' de ' + ${evento.getQuantidadeIngressosDisponiveis()}">0 de 0</p>
+                    </div>
+
+                    <div class="evento-info" th:if="${evento.estaLotado()}">
+                        <label style="color: var(--danger-color);">Status</label>
+                        <p style="color: var(--danger-color); font-weight: 600;">Evento Lotado</p>
+                    </div>
+                </div>
+
+                <div class="evento-footer">
+                    <a href="#" th:href="@{'/catalogo/detalhes/' + ${evento.id}}" class="btn-detalhes">Detalhes</a>
+                    <a href="#" th:href="@{'/comprar/' + ${evento.id}}" 
+                       th:classappend="${evento.estaLotado()} ? 'desabilitado' : ''"
+                       class="btn-comprar" 
+                       th:text="${evento.estaLotado()} ? 'Lotado' : 'Comprar'"
+                       th:onclick="${evento.estaLotado()} ? 'return false;' : ''"></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mensagem quando não há eventos -->
+        <div class="vazio" th:if="${eventos.size() == 0}">
+            <h2>Nenhum evento encontrado</h2>
+            <p>Não há eventos que correspondem aos critérios de filtro aplicados.</p>
+            <a href="/catalogo">Voltar ao Catalogo Completo</a>
+        </div>
+    </main>
+
+    <footer>
+        <p>Copyright 2024 Sistema de Ingressos para Eventos - Todos os direitos reservados</p>
+        <p>Desenvolvido com  por <strong>Bruno</strong></p>
+    </footer>
+</body>
+</html>

@@ -12,6 +12,11 @@ target/
 .DS_Store
 Thumbs.db
 
+# Config local / segredos
+application-local.properties
+.env
+.env.*
+
 # Node (se houver)
 node_modules/
 npm-debug.log

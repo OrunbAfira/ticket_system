@@ -29,6 +29,10 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
+    public boolean verificarLoginExistente(String login) {
+        return usuarioRepository.findByLogin(login).isPresent();
+    }
+
     public Optional<Usuario> fazerLogin(String login, String senha) {
 
         if (login.equals("admin") && senha.equals("123")) {
@@ -47,5 +51,9 @@ public class UsuarioService {
         }
 
         return Optional.empty();
+    }
+
+    public Optional<Usuario> buscarPorLogin(String login) {
+        return usuarioRepository.findByLogin(login);
     }
 }

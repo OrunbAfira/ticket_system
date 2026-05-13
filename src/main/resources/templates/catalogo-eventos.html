@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalogo de Eventos - Sistema de Ingressos</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .catalogo-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .catalogo-header h1 {
+            color: white;
+            margin: 0;
+        }
+
+        .catalogo-header p {
+            color: rgba(255,255,255,0.9);
+            margin: 0.5rem 0 0 0;
+        }
+
+        .catalogo-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .stat-card h3 {
+            margin: 0;
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-card .valor {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin: 0.5rem 0 0 0;
+        }
+
+        .filtros {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filtros a, .filtros button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .filtros a.active, .filtros button.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .filtros a:hover:not(.active), .filtros button:hover:not(.active) {
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary-color);
+        }
+
+        .eventos-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .evento-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .evento-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+
+        .evento-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 1.5rem;
+            color: white;
+        }
+
+        .evento-header h3 {
+            margin: 0;
+            font-size: 1.3rem;
+        }
+
+        .evento-body {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .evento-info {
+            margin-bottom: 1rem;
+        }
+
+        .evento-info label {
+            font-weight: 600;
+            color: var(--dark);
+            display: block;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: #666;
+            margin-bottom: 0.25rem;
+        }
+
+        .evento-info p {
+            margin: 0;
+            color: var(--dark);
+        }
+
+        .evento-descricao {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+
+        .evento-preco {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--success-color);
+            margin: 1rem 0;
+        }
+
+        .evento-disponibilidade {
+            margin: 1rem 0;
+        }
+
+        .progresso-vendas {
+            background: #e0e0e0;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progresso-vendas-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            width: var(--percentual);
+            border-radius: 4px;
+        }
+
+        .ingressos-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .evento-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .evento-footer a {
+            flex: 1;
+            padding: 0.75rem;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-detalhes {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-detalhes:hover {
+            background: darken(var(--primary-color), 10%);
+        }
+
+        .btn-comprar {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-comprar:hover {
+            background: darken(var(--success-color), 10%);
+        }
+
+        .btn-comprar:disabled, .btn-comprar.desabilitado {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .badge-disponivel {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success-color);
+        }
+
+        .badge-lotado {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger-color);
+        }
+
+        .badge-ultimo-ingresso {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--secondary-color);
+        }
+
+        .vazio {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .vazio p {
+            font-size: 1.1rem;
+            margin: 0.5rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .catalogo-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .eventos-container {
+                grid-template-columns: 1fr;
+            }
+
+            .filtros {
+                flex-direction: column;
+            }
+
+            .filtros a, .filtros button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">Ingressos Pro</a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/catalogo" class="active">Catalogo</a>
+                <a href="/login">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Cabeçalho do Catálogo -->
+        <div class="catalogo-header">
+            <h1>Catalogo de Eventos</h1>
+            <p>Explore os eventos disponíveis e escolha aquele que mais interessa</p>
+        </div>
+
+        <!-- Estatísticas -->
+        <div class="catalogo-stats">
+            <div class="stat-card">
+                <h3>Total de Eventos</h3>
+                <p class="valor" th:text="${totalEventos}">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Ingressos Disponiveis</h3>
+                <p class="valor" th:text="${totalIngressosDisponiveis}">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Eventos com Ingressos</h3>
+                <p class="valor" th:text="${eventos.size()}">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Eventos Lotados</h3>
+                <p class="valor" th:text="${eventosLotados.size()}">0</p>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="filtros">
+            <a href="/catalogo" class="active">Todos</a>
+            <a href="/catalogo/disponiveis">Com Ingressos</a>
+            <a href="/catalogo/lotados">Lotados</a>
+        </div>
+
+        <!-- Lista de Eventos -->
+        <div class="eventos-container" th:if="${eventos.size() > 0}">
+            <div class="evento-card" th:each="evento : ${eventos}">
+                <!-- Badge de Status -->
+                <div style="padding: 1rem 1.5rem 0;">
+                    <span th:if="${evento.temIngressosDisponiveis()}" class="badge badge-disponivel">
+                        <span th:text="${evento.getIngressosRestantes()} + ' ingressos'"></span>
+                    </span>
+                    <span th:if="${evento.estaLotado()}" class="badge badge-lotado">Evento Lotado</span>
+                    <span th:if="${evento.getPercentualVenda() >= 80 and !evento.estaLotado()}" class="badge badge-ultimo-ingresso">
+                        <span th:text="${evento.getPercentualVenda()} + '% vendido'"></span>
+                    </span>
+                </div>
+
+                <!-- Cabeçalho com Nome -->
+                <div class="evento-header">
+                    <h3 th:text="${evento.nome}">Nome do Evento</h3>
+                </div>
+
+                <!-- Corpo do Evento -->
+                <div class="evento-body">
+                    <!-- Descrição -->
+                    <p class="evento-descricao" th:text="${evento.descricao}">Descrição do evento</p>
+
+                    <!-- Informações -->
+                    <div class="evento-info">
+                        <label>Data e Horário</label>
+                        <p th:text="${evento.getDataHoraFormatada()}">Data e hora</p>
+                    </div>
+
+                    <div class="evento-info">
+                        <label>Local</label>
+                        <p th:text="${evento.local}">Local do evento</p>
+                    </div>
+
+                    <!-- Preço -->
+                    <div class="evento-preco">
+                        R$ <span th:text="${#numbers.formatDecimal(evento.valorIngresso, 1, 'COMMA', 2, 'POINT')}">0,00</span>
+                    </div>
+
+                    <!-- Disponibilidade -->
+                    <div class="evento-disponibilidade" th:if="${evento.temIngressosDisponiveis()}">
+                        <div class="progresso-vendas">
+                            <div class="progresso-vendas-bar" 
+                                 th:style="'--percentual: ' + ${evento.getPercentualVenda()} + '%'"></div>
+                        </div>
+                        <div class="ingressos-info">
+                            <span th:text="${evento.getIngressosRestantes()} + ' disponível'"></span>
+                            <span th:text="${evento.getIngressosVendidos()} + ' vendido'"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rodapé com Ações -->
+                <div class="evento-footer">
+                    <a href="#" th:href="@{'/catalogo/detalhes/' + ${evento.id}}" class="btn-detalhes">Ver Detalhes</a>
+                    <a href="#" th:href="@{'/comprar/' + ${evento.id}}" 
+                       th:classappend="${evento.estaLotado()} ? 'desabilitado' : ''"
+                       class="btn-comprar" 
+                       th:text="${evento.estaLotado()} ? 'Lotado' : 'Comprar'"></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mensagem quando não há eventos -->
+        <div class="vazio" th:if="${eventos.size() == 0}">
+            <p>Nenhum evento disponível no momento.</p>
+            <a href="/catalogo" class="btn">Voltar ao Catalogo</a>
+        </div>
+    </main>
+
+    <footer>
+        <p>Copyright 2024 Sistema de Ingressos para Eventos - Todos os direitos reservados</p>
+        <p>Desenvolvido com  por <strong>Bruno</strong></p>
+    </footer>
+</body>
+</html>

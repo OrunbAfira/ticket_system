@@ -2,43 +2,79 @@
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Painel Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Admin - Sistema de Ingressos</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
-    <div class="container">
-
-        <h1>Painel do Administrador</h1>
-
-        <div class="top-actions">
-            <a href="/admin/novo" class="btn">Cadastrar novo evento</a>
-            <a href="/login" class="btn">Sair</a>
+    <!-- NAVBAR -->
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">Ingressos Pro</a>
+            <div class="nav-links">
+                <span style="color: white; font-weight: 600;">Painel Admin</span>
+                <form action="/logout" method="post" style="display: inline;">
+                    <button class="logout-btn" type="submit">Sair</button>
+                </form>
+            </div>
         </div>
+    </nav>
 
-        <h2>Eventos Cadastrados</h2>
+    <!-- MAIN -->
+    <main>
+        <div class="container">
+            <h1>Painel do Administrador</h1>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Nome</th>
-                    <th>Data</th>
-                    <th>Local</th>
-                    <th>Valor Base</th>
-                </tr>
-            </thead>
+            <p class="text-muted">Gerencie eventos e visualize informações cadastradas no sistema.</p>
 
-            <tbody>
-                <tr th:each="evento : ${eventos}">
-                    <td th:text="${evento.nome}"></td>
-                    <td th:text="${evento.data}"></td>
-                    <td th:text="${evento.local}"></td>
-                    <td th:text="${'R$ ' + evento.valorBase}"></td>
-                </tr>
-            </tbody>
-        </table>
+            <div class="top-actions">
+                <a href="/admin/novo" class="btn btn-secondary">Cadastrar Novo Evento</a>
+                <a href="/admin/validar" class="btn">Validar QR Code</a>
+            </div>
 
-    </div>
+            <div class="divider"></div>
+
+            <h2>Eventos Cadastrados</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Data</th>
+                        <th>Local</th>
+                        <th>Valor Base</th>
+                        <th>Ingressos</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr th:each="evento : ${eventos}">
+                        <td th:text="${evento.nome}"></td>
+                        <td th:text="${evento.data}"></td>
+                        <td th:text="${evento.local}"></td>
+                        <td th:text="${'R$ ' + evento.valorBase}"></td>
+                        <td>
+                            <a class="btn" th:href="@{/admin/eventos/{id}/ingressos(id=${evento.id})}">Ver ingressos</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="btn-group" style="margin-top: 2rem;">
+                <a href="/admin/novo" class="btn btn-secondary">Novo Evento</a>
+                <form action="/logout" method="post" style="display: inline;">
+                    <button class="btn btn-danger" type="submit">Sair</button>
+                </form>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2024 Sistema de Ingressos para Eventos</p>
+    </footer>
 
 </body>
 </html>

@@ -2,45 +2,128 @@
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Imprimir Ingresso</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imprimir Ingresso - Sistema de Ingressos</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
-<div class="container">
+    <!-- NAVBAR -->
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">Ingressos Pro</a>
+            <div class="nav-links">
+                <a href="/eventos">Eventos</a>
+                <a href="/ingressos">Meus Ingressos</a>
+                <form action="/logout" method="post" style="display: inline;">
+                    <button class="logout-btn" type="submit">Sair</button>
+                </form>
+            </div>
+        </div>
+    </nav>
 
-    <h1>Ingresso Pago</h1>
+    <!-- MAIN -->
+    <main>
+        <div class="container" style="max-width: 650px;">
+            <h1>Ingresso Pago</h1>
 
-    <div class="card" th:if="${ingresso != null}">
-        <h2>Comprovante / Impressão do Ingresso</h2>
+            <div class="card" th:if="${ingresso != null}">
+                <div class="sucesso">
+                    <h2>Comprovante de Compra / Impressão do Ingresso</h2>
+                    <p>Seu pagamento foi confirmado! Abaixo estão os detalhes do seu ingresso.</p>
+                </div>
 
-        <p><strong>Evento:</strong> <span th:text="${ingresso.nomeEvento}"></span></p>
-        <p><strong>Cliente:</strong> <span th:text="${ingresso.nomeCliente}"></span></p>
-        <p><strong>Data:</strong> <span th:text="${ingresso.dataEvento}"></span></p>
-        <p><strong>Tipo:</strong> <span th:text="${ingresso.tipoIngresso}"></span></p>
-        <p><strong>Valor Final:</strong> R$ <span th:text="${ingresso.valorFinal}"></span></p>
-        <p><strong>Estado:</strong> <span th:text="${ingresso.estado}"></span></p>
+                <div style="background: var(--light); padding: 1.5rem; border-radius: 0.75rem; margin: 1.5rem 0;">
+                    <p><strong>Evento:</strong> <span th:text="${ingresso.nomeEvento}"></span></p>
+                    <p><strong>Cliente:</strong> <span th:text="${ingresso.nomeCliente}"></span></p>
+                    <p><strong>Data do Evento:</strong> <span th:text="${ingresso.dataEvento}"></span></p>
+                    <p><strong>Tipo:</strong> <span th:text="${ingresso.tipoIngresso}"></span></p>
+                </div>
 
-        <hr>
+                <div style="background: var(--primary-light); padding: 1.5rem; border-radius: 0.75rem; border: 2px solid var(--primary-color);">
+                    <p><strong>Valor Final:</strong> <strong style="color: var(--primary-color); font-size: 1.3rem;">R$ <span th:text="${ingresso.valorFinal}"></span></strong></p>
+                    <p><strong>Estado:</strong> 
+                        <span class="text-success">Pago e Confirmado</span>
+                    </p>
+                </div>
 
-        <h3>Ingresso:</h3>
-        <p th:text="${ingresso.imprimirIngresso}"></p>
+                <div class="divider"></div>
 
-        <br>
+                <div style="background: #f0f9ff; padding: 2rem; border-radius: 0.75rem; border: 3px dashed var(--primary-color); text-align: center;">
+                    <h3>SEU INGRESSO</h3>
+                    <p style="font-size: 1.1rem; margin: 1rem 0;" th:text="${ingresso.imprimirIngresso}"></p>
+                    <p style="color: #6b7280; font-size: 0.9rem; margin-top: 1rem;">
+                        <em>Apresente este ingresso na entrada do evento</em>
+                    </p>
+                </div>
 
-        <button class="btn" onclick="window.print()">Imprimir</button>
-    </div>
+                <div style="background: #fef3c7; padding: 1.5rem; border-radius: 0.75rem; border: 2px solid var(--secondary-color); margin: 1.5rem 0;">
+                    <p style="margin: 0 0 0.5rem 0; color: #666; font-size: 0.85rem; text-transform: uppercase; font-weight: 600;">Código de Validação</p>
+                    <p style="margin: 0; font-family: 'Courier New', monospace; font-size: 1.3rem; font-weight: bold; letter-spacing: 2px; word-break: break-all;" th:text="${ingresso.hashIdCurto}"></p>
+                    <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.8rem;">
+                        <em>Use este código para validação na entrada</em>
+                    </p>
+                </div>
 
-    <div th:if="${ingresso == null}">
-        <p class="erro">Ingresso não encontrado.</p>
-    </div>
+                <!-- QR Code para Impressão -->
+                <div style="background: white; padding: 2rem; border-radius: 0.75rem; border: 3px dashed var(--secondary-color); margin: 1.5rem 0; text-align: center;">
+                    <p style="margin: 0 0 1rem 0; color: #666; font-size: 0.9rem; text-transform: uppercase; font-weight: 600;">Código QR - Escaneie para Validar</p>
+                    <img th:src="@{/api/qrcode/{id}(id=${ingresso.hashId}, size=300)}" 
+                         alt="QR Code do Ingresso" 
+                         style="width: 300px; height: 300px; border: 2px solid #333; border-radius: 4px;"/>
+                    <p style="margin: 1rem 0 0 0; color: #666; font-size: 0.85rem;">Apresente este código QR na entrada do evento</p>
+                </div>
 
-    <br>
+                <div style="background: #f3f4f6; padding: 1rem; border-radius: 0.75rem; margin-bottom: 1.5rem;">
+                    <p style="margin: 0; color: #666; font-size: 0.8rem;">
+                        <strong>Hash Completo (ID do Ingresso):</strong><br/>
+                        <span style="font-family: 'Courier New', monospace; font-size: 0.75rem; word-break: break-all;" th:text="${ingresso.hashId}"></span>
+                    </p>
+                </div>
 
-    <a href="/ingressos" class="btn">Meus Ingressos</a>
-    <a href="/eventos" class="btn">Comprar outro</a>
+                <div class="divider"></div>
 
-</div>
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="window.print()" style="flex: 1;">Imprimir Ingresso</button>
+                    <a href="/ingressos" class="btn">← Meus Ingressos</a>
+                </div>
+            </div>
+
+            <div th:if="${ingresso == null}" class="card erro">
+                <p>Ingresso não encontrado.</p>
+                <a href="/ingressos" class="btn mt-2" style="display: inline-block;">Voltar aos Ingressos</a>
+            </div>
+
+            <div class="top-actions" style="margin-top: 2rem;">
+                <a href="/ingressos" class="btn">Meus Ingressos</a>
+                <a href="/eventos" class="btn btn-secondary">Comprar Outro</a>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2024 Sistema de Ingressos para Eventos</p>
+    </footer>
+
+    <style>
+        @media print {
+            nav, footer, .btn-group, .top-actions {
+                display: none !important;
+            }
+            body {
+                background: white;
+            }
+            main {
+                margin: 0 !important;
+            }
+            .container {
+                box-shadow: none !important;
+                max-width: 100% !important;
+            }
+        }
+    </style>
 
 </body>
 </html>

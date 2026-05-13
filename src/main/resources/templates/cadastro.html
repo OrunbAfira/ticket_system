@@ -2,44 +2,80 @@
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Comprar Ingresso</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprar Ingresso - Sistema de Ingressos</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
-    <div class="container">
+    <!-- NAVBAR -->
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">Ingressos Pro</a>
+            <div class="nav-links">
+                <a href="/eventos">Eventos</a>
+                <a href="/ingressos">Meus Ingressos</a>
+                <form action="/logout" method="post" style="display: inline;">
+                    <button class="logout-btn" type="submit">Sair</button>
+                </form>
+            </div>
+        </div>
+    </nav>
 
-        <h1>Comprar Ingresso</h1>
+    <!-- MAIN -->
+    <main>
+        <div class="container" style="max-width: 600px;">
+            <h1>Comprar Ingresso</h1>
 
-        <form action="/ingressos/salvar" method="post">
+            <p class="text-muted">Preencha os dados abaixo para adquirir seu ingresso.</p>
 
-            <label>Tipo de ingresso:</label>
-            <select name="tipo" required>
-                <option value="NORMAL">Normal</option>
-                <option value="VIP">VIP</option>
-                <option value="MEIA">Meia-entrada</option>
-            </select>
+            <div class="card">
+                <form action="/ingressos/salvar" method="post">
 
-            <label>Nome do evento:</label>
-            <input type="text" name="nomeEvento" required>
+                    <div class="form-group">
+                        <label for="tipo">Tipo de Ingresso:</label>
+                        <select id="tipo" name="tipo" required>
+                            <option value="">-- Selecione um tipo --</option>
+                            <option value="NORMAL">Normal</option>
+                            <option value="VIP">VIP - Acesso Premium</option>
+                            <option value="MEIA">50% Meia-entrada</option>
+                        </select>
+                    </div>
 
-            <label>Nome do cliente:</label>
-            <input type="text" name="nomeCliente" required>
+                    <div class="form-group">
+                        <label for="nomeEvento">Nome do Evento:</label>
+                        <input type="text" id="nomeEvento" name="nomeEvento" placeholder="Ex: Festival 2024" required>
+                    </div>
 
-            <label>Data do evento:</label>
-            <input type="date" name="dataEvento" required>
+                    <div class="form-group">
+                        <label for="nomeCliente">Seu Nome Completo:</label>
+                        <input type="text" id="nomeCliente" name="nomeCliente" placeholder="Ex: João Silva" required>
+                    </div>
 
-            <label>Valor base:</label>
-            <input type="number" name="valorBase" step="0.01" required>
+                    <div class="form-group">
+                        <label for="dataEvento">Data do Evento:</label>
+                        <input type="date" id="dataEvento" name="dataEvento" required>
+                    </div>
 
-            <button class="btn" type="submit">Comprar</button>
-        </form>
+                    <div class="form-group">
+                        <label for="valorBase">Valor Base:</label>
+                        <input type="number" id="valorBase" name="valorBase" step="0.01" placeholder="Ex: 100.00" required>
+                    </div>
 
-        <br>
+                    <div class="btn-group">
+                        <button class="btn" type="submit" style="flex: 1;">Comprar Ingresso</button>
+                        <a href="/eventos" class="btn btn-secondary">← Voltar</a>
+                    </div>
+                </form>
+            </div>
 
-        <a href="/">Voltar</a>
+        </div>
+    </main>
 
-    </div>
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2024 Sistema de Ingressos para Eventos</p>
+    </footer>
 
 </body>
 </html>

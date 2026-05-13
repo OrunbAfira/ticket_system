@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validar Ingresso (QR) - Admin</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav>
+    <div class="nav-container">
+        <a href="/" class="logo">Ingressos Pro</a>
+        <div class="nav-links">
+            <a href="/admin">Painel Admin</a>
+            <a href="/admin/validar" class="active">Validar QR</a>
+            <form action="/logout" method="post" style="display: inline;">
+                <button class="logout-btn" type="submit">Sair</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<main>
+    <div class="container" style="max-width: 800px;">
+        <h1>Validação por QR Code</h1>
+
+        <p class="text-muted">Cole o hash completo do ingresso (conteúdo do QR Code) para validar.</p>
+
+        <form action="/admin/validar" method="get" class="card" style="margin-top: 1rem;">
+            <div class="form-group">
+                <label for="hash">Hash do Ingresso</label>
+                <input id="hash" name="hash" type="text" th:value="${hash}" placeholder="Ex.: 8b3c..." required>
+            </div>
+            <div class="btn-group">
+                <button class="btn" type="submit" style="flex: 1;">Validar</button>
+                <a href="/admin" class="btn btn-secondary">← Voltar</a>
+            </div>
+        </form>
+
+        <div th:if="${info}" class="card" style="margin-top: 1rem;">
+            <p th:text="${info}"></p>
+        </div>
+
+        <div th:if="${ingresso != null}" class="card" style="margin-top: 1rem;">
+            <h2>Resultado</h2>
+            <p><strong>Evento:</strong> <span th:text="${ingresso.nomeEvento}"></span></p>
+            <p><strong>Cliente:</strong> <span th:text="${ingresso.nomeCliente}"></span></p>
+            <p><strong>Tipo:</strong> <span th:text="${ingresso.tipoIngresso}"></span></p>
+            <p><strong>Estado:</strong> <span th:text="${ingresso.estado}"></span></p>
+
+            <div class="divider"></div>
+
+            <div th:if="${param.sucesso}" class="sucesso">
+                <p>Ingresso marcado como UTILIZADO com sucesso.</p>
+            </div>
+
+            <form action="/admin/validar/utilizar" method="post" style="margin-top: 1rem;">
+                <input type="hidden" name="hash" th:value="${ingresso.hashId}">
+                <button class="btn btn-success" type="submit">Marcar como utilizado</button>
+            </form>
+
+            <div style="margin-top: 1rem;">
+                <p style="color:#666; font-size:0.85rem;"><strong>Hash completo:</strong></p>
+                <p style="font-family: 'Courier New', monospace; font-size:0.8rem; word-break: break-all;" th:text="${ingresso.hashId}"></p>
+            </div>
+        </div>
+
+        <div th:if="${hash != null and ingresso == null}" class="card erro" style="margin-top: 1rem;">
+            <p>Ingresso não encontrado para o hash informado.</p>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2024 Sistema de Ingressos para Eventos</p>
+</footer>
+
+</body>
+</html>

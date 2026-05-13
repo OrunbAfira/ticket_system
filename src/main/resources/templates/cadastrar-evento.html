@@ -2,37 +2,156 @@
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Cadastrar Evento</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Evento - Sistema de Ingressos</title>
     <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-grid.full {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-info {
+            background: rgba(37, 99, 235, 0.1);
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .form-info p {
+            margin: 0;
+            color: var(--primary-color);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
 
-    <div class="container">
+    <!-- NAVBAR -->
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">Ingressos Pro</a>
+            <div class="nav-links">
+                <a href="/admin">Painel Admin</a>
+                <form action="/logout" method="post" style="display: inline;">
+                    <button class="logout-btn" type="submit">Sair</button>
+                </form>
+            </div>
+        </div>
+    </nav>
 
-        <h1>Cadastrar Evento</h1>
+    <!-- MAIN -->
+    <main>
+        <div class="container" style="max-width: 700px;">
+            <h1>Cadastrar Novo Evento</h1>
 
-        <form action="/admin/salvar" method="post">
+            <div class="form-info">
+                <p>Preencha todos os campos obrigatórios para criar um novo evento no sistema.</p>
+            </div>
 
-            <label>Nome do evento:</label>
-            <input type="text" name="nome" required>
+            <div class="card">
+                <form action="/admin/salvar" method="post">
 
-            <label>Data:</label>
-            <input type="date" name="data" required>
+                    <!-- Nome do Evento (Campo inteiro) -->
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label for="nome">Nome do Evento:</label>
+                        <input type="text" id="nome" name="nome" placeholder="Ex: Festival de Música 2024" required>
+                    </div>
 
-            <label>Local:</label>
-            <input type="text" name="local" required>
+                    <!-- Descrição (Campo inteiro) -->
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label for="descricao">Descrição:</label>
+                        <textarea id="descricao" name="descricao" placeholder="Descreva brevemente o evento..."></textarea>
+                    </div>
 
-            <label>Valor base:</label>
-            <input type="number" name="valorBase" step="0.01" required>
+                    <!-- Data e Horário (Lado a lado) -->
+                    <div class="form-grid" style="margin-bottom: 1rem;">
+                        <div class="form-group">
+                            <label for="data">Data do Evento:</label>
+                            <input type="date" id="data" name="data" required>
+                        </div>
 
-            <button class="btn" type="submit">Salvar Evento</button>
-        </form>
+                        <div class="form-group">
+                            <label for="horario">Horário:</label>
+                            <input type="time" id="horario" name="horario">
+                        </div>
+                    </div>
 
-        <br>
+                    <!-- Local e Quantidade (Lado a lado) -->
+                    <div class="form-grid" style="margin-bottom: 1rem;">
+                        <div class="form-group">
+                            <label for="local">Local:</label>
+                            <input type="text" id="local" name="local" placeholder="Ex: Centro de Convenções" required>
+                        </div>
 
-        <a href="/admin">Voltar</a>
+                        <div class="form-group">
+                            <label for="quantidadeIngressos">Quantidade de Ingressos:</label>
+                            <input type="number" id="quantidadeIngressos" name="quantidadeIngressos" value="100" min="1" required>
+                        </div>
+                    </div>
 
-    </div>
+                    <!-- Valor Base (Campo inteiro) -->
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label for="valorBase">Valor Base do Ingresso (R$):</label>
+                        <input type="number" id="valorBase" name="valorBase" step="0.01" placeholder="Ex: 100.00" required>
+                    </div>
+
+                    <!-- Botões -->
+                    <div class="btn-group">
+                        <button class="btn" type="submit">Salvar Evento</button>
+                        <a href="/admin" class="btn btn-secondary">← Voltar</a>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2024 Sistema de Ingressos para Eventos</p>
+    </footer>
 
 </body>
 </html>

@@ -2,39 +2,61 @@
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Sistema de Ingressos</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
-    <div class="container">
+    <!-- NAVBAR -->
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">Ingressos Pro</a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+            </div>
+        </div>
+    </nav>
 
-        <h1>Login</h1>
+    <!-- MAIN -->
+    <main>
+        <div class="container" style="max-width: 450px;">
+            <h1>Login</h1>
 
-        <div class="card">
+            <div class="card">
+                <form action="/login" method="post">
+                    
+                    <div class="form-group">
+                        <label for="login">Usuário:</label>
+                        <input type="text" id="login" name="login" placeholder="Digite seu usuário" required>
+                    </div>
 
-            <form action="/login" method="post">
+                    <div class="form-group">
+                        <label for="senha">Senha:</label>
+                        <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
+                    </div>
 
-                <label>Usuário:</label>
-                <input type="text" name="login" placeholder="Digite seu usuário" required>
+                    <button class="btn" type="submit" style="width: 100%;">Entrar</button>
+                    
+                </form>
 
-                <label>Senha:</label>
-                <input type="password" name="senha" placeholder="Digite sua senha" required>
+                <p th:if="${erro}" class="erro" th:text="${erro}"></p>
 
-                <button class="btn" type="submit">Entrar</button>
-            </form>
+            </div>
 
-            <p th:if="${erro}" th:text="${erro}" class="erro"></p>
+            <div class="divider"></div>
+
+            <div class="text-center">
+                <p>Não possui conta? <a href="/cadastro-usuario">Criar uma agora</a></p>
+            </div>
 
         </div>
+    </main>
 
-        <br>
-
-        <div style="text-align: center;">
-            <a href="/cadastro-usuario">Criar conta</a>
-        </div>
-
-    </div>
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2024 Sistema de Ingressos para Eventos</p>
+    </footer>
 
 </body>
 </html>

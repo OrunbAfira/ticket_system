@@ -2,77 +2,113 @@
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Comprar Ingresso</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprar Ingresso - Sistema de Ingressos</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
-<div class="container">
-    <h1>Comprar Ingresso</h1>
-
-    <div class="card" th:if="${evento != null}">
-        <h2 th:text="${evento.nome}"></h2>
-        <p><strong>Data:</strong> <span th:text="${evento.data}"></span></p>
-        <p><strong>Local:</strong> <span th:text="${evento.local}"></span></p>
-        <p><strong>Valor Base:</strong> R$ <span id="valorBase" th:text="${evento.valorBase}"></span></p>
-    </div>
-
-    <form action="/ingressos/salvar" method="post" th:if="${evento != null}">
-        <input type="hidden" name="nomeEvento" th:value="${evento.nome}">
-        <input type="hidden" name="dataEvento" th:value="${evento.data}">
-        <input type="hidden" name="valorBase" th:value="${evento.valorBase}">
-
-        <!-- Agora o cliente será o usuário logado -->
-        <input type="hidden" name="nomeCliente" th:value="${session.nomeUsuario}">
-
-        <label>Tipo de ingresso:</label>
-        <select name="tipo" id="tipoIngresso" required>
-            <option value="NORMAL">Normal</option>
-            <option value="VIP">VIP</option>
-            <option value="MEIA">Meia-entrada</option>
-        </select>
-
-        <div class="card">
-            <h3>Valor final:</h3>
-            <p id="valorFinal"></p>
+    <!-- NAVBAR -->
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">Ingressos Pro</a>
+            <div class="nav-links">
+                <a href="/eventos">Eventos</a>
+                <a href="/ingressos">Meus Ingressos</a>
+                <form action="/logout" method="post" style="display: inline;">
+                    <button class="logout-btn" type="submit">Sair</button>
+                </form>
+            </div>
         </div>
+    </nav>
 
-        <button class="btn" type="submit">Confirmar compra</button>
-    </form>
+    <!-- MAIN -->
+    <main>
+        <div class="container" style="max-width: 600px;">
+            <h1>Comprar Ingresso</h1>
 
-    <div th:if="${evento == null}">
-        <p class="erro">Evento não encontrado.</p>
-    </div>
+            <div class="card erro" th:if="${param.erro != null}">
+                <p th:text="${param.erro}">Erro ao comprar ingresso.</p>
+                <div class="btn-group">
+                    <a href="/ingressos" class="btn btn-secondary" style="flex: 1;">Ver meus ingressos</a>
+                    <a href="/eventos" class="btn" style="flex: 1;">Voltar aos eventos</a>
+                </div>
+            </div>
 
-    <br>
+            <div class="card" th:if="${evento != null}">
+                <h2 th:text="${evento.nome}"></h2>
+                <div style="background: var(--light); padding: 1rem; border-radius: 0.5rem; margin: 1rem 0;">
+                    <p><strong>Data:</strong> <span th:text="${evento.data}"></span></p>
+                    <p><strong>Local:</strong> <span th:text="${evento.local}"></span></p>
+                    <p><strong>Ingressos disponíveis:</strong> <span th:text="${evento.ingressosRestantes}"></span></p>
+                    <p><strong>Valor Base:</strong> R$ <span id="valorBase" th:text="${evento.valorBase}"></span></p>
+                </div>
 
-    <a href="/eventos" class="btn">Voltar</a>
-</div>
+                <div class="card erro" th:if="${evento.estaLotado()}">
+                    <p>Este evento está lotado no momento.</p>
+                </div>
+            </div>
 
-<script th:inline="javascript">
-    const valorBase = Number([[${evento != null ? evento.valorBase : 0}]]);
-    const tipo = document.getElementById("tipoIngresso");
-    const valorFinal = document.getElementById("valorFinal");
+            <form action="/ingressos/salvar" method="post" th:if="${evento != null and !evento.estaLotado()}">
+                <input type="hidden" name="eventoId" th:value="${evento.id}">
 
-    function calcularValor() {
-        if (!tipo || !valorFinal) return;
+                <div class="form-group">
+                    <label for="tipoIngresso">Escolha o Tipo de Ingresso:</label>
+                    <select id="tipoIngresso" name="tipo" required>
+                        <option value="">-- Selecione --</option>
+                        <option value="NORMAL">Ingresso Normal</option>
+                        <option value="VIP">Ingresso VIP (1.5x o preço)</option>
+                        <option value="MEIA">50% Meia-entrada (50% desconto)</option>
+                    </select>
+                </div>
 
-        let valor = valorBase;
+                <div class="card">
+                    <h3>Valor Final:</h3>
+                    <p style="font-size: 1.5rem; color: var(--primary-color); font-weight: 700;" id="valorFinal">R$ 0.00</p>
+                </div>
 
-        if (tipo.value === "VIP") {
-            valor = valorBase * 1.5;
-        } else if (tipo.value === "MEIA") {
-            valor = valorBase / 2;
+                <div class="btn-group">
+                    <button class="btn" type="submit" style="flex: 1;">Confirmar Compra</button>
+                    <a href="/eventos" class="btn btn-secondary">← Voltar</a>
+                </div>
+            </form>
+
+            <div th:if="${evento == null}" class="card erro">
+                <p>Evento não encontrado.</p>
+                <a href="/eventos" class="btn mt-2" style="display: inline-block;">Voltar aos Eventos</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2024 Sistema de Ingressos para Eventos</p>
+    </footer>
+
+    <script th:inline="javascript">
+        const valorBase = Number([[${evento != null ? evento.valorBase : 0}]]);
+        const tipo = document.getElementById("tipoIngresso");
+        const valorFinal = document.getElementById("valorFinal");
+
+        function calcularValor() {
+            if (!tipo || !valorFinal) return;
+
+            let valor = valorBase;
+
+            if (tipo.value === "VIP") {
+                valor = valorBase * 1.5;
+            } else if (tipo.value === "MEIA") {
+                valor = valorBase / 2;
+            }
+
+            valorFinal.innerText = "R$ " + valor.toFixed(2);
         }
 
-        valorFinal.innerText = "R$ " + valor.toFixed(2);
-    }
-
-    if (tipo) {
-        tipo.addEventListener("change", calcularValor);
-        calcularValor();
-    }
-</script>
+        if (tipo) {
+            tipo.addEventListener("change", calcularValor);
+            calcularValor();
+        }
+    </script>
 
 </body>
 </html>

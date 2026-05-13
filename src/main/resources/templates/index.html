@@ -2,27 +2,84 @@
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Sistema de Ingressos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Ingressos - Home</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
-    <div class="container">
-
-        <h1>Sistema de Ingressos para Eventos</h1>
-
-        <div class="top-actions">
-            <a href="/login" class="btn">Login</a>
-            <a href="/ingressos/novo" class="btn">Comprar Ingresso</a>
-            <a href="/ingressos" class="btn">Listar Ingressos</a>
+    <!-- NAVBAR -->
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">Ingressos Pro</a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/catalogo">Catalogo</a>
+                <a href="/login" class="btn">Login</a>
+            </div>
         </div>
+    </nav>
 
-        <div class="card">
-            <h3>Bem-vindo 👋</h3>
-            <p>Gerencie eventos, compre ingressos e acompanhe tudo em um só lugar.</p>
+    <!-- MAIN -->
+    <main>
+        <div class="container">
+            <h1>Bem-vindo ao Sistema de Ingressos</h1>
+
+            <div class="card">
+                <h3>Gerencie eventos e compre ingressos com facilidade</h3>
+                <p>Plataforma completa para vendas, gerenciamento e controle de eventos.</p>
+            </div>
+
+            <div class="top-actions">
+                <a href="/catalogo" class="btn">Ver Catalogo</a>
+                <a href="/login" class="btn">Fazer Login</a>
+                <a href="/cadastro-usuario" class="btn btn-secondary">Criar Conta</a>
+            </div>
+
+            <div class="divider"></div>
+
+            <h2>Funcionalidades Principais</h2>
+
+            <div class="card-grid">
+                <div class="card-item">
+                    <h4>Comprar Ingressos</h4>
+                    <p>Adquira ingressos para seus eventos favoritos de forma rápida e segura.</p>
+                </div>
+
+                <div class="card-item">
+                    <h4>Visualizar Eventos</h4>
+                    <p>Confira a lista completa de eventos disponíveis com datas e informações.</p>
+                </div>
+
+                <div class="card-item">
+                    <h4>Múltiplas Categorias</h4>
+                    <p>Escolha entre ingressos Normal, VIP e Meia entrada conforme sua preferência.</p>
+                </div>
+
+                <div class="card-item">
+                    <h4>Imprimir Ingressos</h4>
+                    <p>Imprima seus ingressos em casa ou salve como PDF para apresentar no evento.</p>
+                </div>
+
+                <div class="card-item">
+                    <h4>Histórico de Compras</h4>
+                    <p>Acompanhe todas as suas compras anteriores e histórico de transações.</p>
+                </div>
+
+                <div class="card-item">
+                    <h4>Painel Administrativo</h4>
+                    <p>Administradores podem gerenciar eventos, ingressos e usuários.</p>
+                </div>
+            </div>
+
         </div>
+    </main>
 
-    </div>
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2024 Sistema de Ingressos para Eventos - Todos os direitos reservados</p>
+        <p>Desenvolvido com  por <strong>Bruno</strong></p>
+    </footer>
 
 </body>
 </html>

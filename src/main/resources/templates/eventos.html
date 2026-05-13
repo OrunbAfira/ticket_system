@@ -2,41 +2,77 @@
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Eventos Disponíveis</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventos Disponíveis - Sistema de Ingressos</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
-<div class="container">
-    <h1>Eventos Disponíveis</h1>
+    <!-- NAVBAR -->
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">Ingressos Pro</a>
+            <div class="nav-links">
+                <a href="/eventos">Eventos</a>
+                <a href="/ingressos">Meus Ingressos</a>
+                <form action="/logout" method="post" style="display: inline;">
+                    <button class="logout-btn" type="submit">Sair</button>
+                </form>
+            </div>
+        </div>
+    </nav>
 
-    <table>
-        <thead>
-        <tr>
-            <th>Evento</th>
-            <th>Data</th>
-            <th>Local</th>
-            <th>Valor Base</th>
-            <th>Ação</th>
-        </tr>
-        </thead>
+    <!-- MAIN -->
+    <main>
+        <div class="container">
+            <h1>Eventos Disponíveis</h1>
 
-        <tbody>
-        <tr th:each="evento : ${eventos}">
-            <td th:text="${evento.nome}"></td>
-            <td th:text="${evento.data}"></td>
-            <td th:text="${evento.local}"></td>
-            <td th:text="${'R$ ' + evento.valorBase}"></td>
-            <td>
-                <a class="btn" th:href="@{/eventos/comprar/{id}(id=${evento.id})}">Comprar</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+            <p class="text-muted">Confira abaixo os eventos disponíveis para compra de ingressos.</p>
 
-    <br>
-    <a href="/login" class="btn">Sair</a>
-</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Evento</th>
+                        <th>Data</th>
+                        <th>Local</th>
+                        <th>Disponíveis</th>
+                        <th>Valor Base</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="evento : ${eventos}">
+                        <td th:text="${evento.nome}"></td>
+                        <td th:text="${evento.data}"></td>
+                        <td th:text="${evento.local}"></td>
+                        <td th:text="${evento.ingressosRestantes}"></td>
+                        <td th:text="${'R$ ' + evento.valorBase}"></td>
+                        <td>
+                            <a class="btn"
+                               th:href="@{/eventos/comprar/{id}(id=${evento.id})}"
+                               th:classappend="${evento.estaLotado()} ? ' btn-secondary' : ''"
+                               th:text="${evento.estaLotado()} ? 'Lotado' : 'Comprar'"
+                               th:attr="aria-disabled=${evento.estaLotado()}"
+                               th:onclick="${evento.estaLotado()} ? 'return false;' : null">Comprar</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="btn-group">
+                <a href="/ingressos" class="btn btn-secondary">Ver Meus Ingressos</a>
+                <form action="/logout" method="post" style="display: inline;">
+                    <button class="btn btn-danger" type="submit">Sair</button>
+                </form>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2024 Sistema de Ingressos para Eventos</p>
+    </footer>
 
 </body>
 </html>

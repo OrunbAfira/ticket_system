@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Evento - Sistema de Ingressos</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .evento-detalhes-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            color: white;
+        }
+
+        .evento-detalhes-header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        .evento-detalhes-header p {
+            margin: 0.5rem 0 0 0;
+            opacity: 0.9;
+        }
+
+        .detalhes-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .detalhes-principal {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .detalhes-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .info-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .info-card h3 {
+            margin: 0 0 1rem 0;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+
+        .info-card p {
+            margin: 0;
+            font-size: 1.1rem;
+            color: var(--dark);
+        }
+
+        .secao {
+            margin-bottom: 2rem;
+        }
+
+        .secao h2 {
+            color: var(--primary-color);
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .secao p {
+            line-height: 1.6;
+            color: #333;
+            text-align: justify;
+        }
+
+        .disponibilidade {
+            margin: 1.5rem 0;
+        }
+
+        .progresso-vendas {
+            background: #e0e0e0;
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progresso-vendas-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            width: var(--percentual);
+            border-radius: 6px;
+        }
+
+        .stats-disponibilidade {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(37, 99, 235, 0.05);
+            border-radius: 6px;
+        }
+
+        .stat-item label {
+            display: block;
+            font-size: 0.85rem;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-item p {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .preco-secao {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(245, 158, 11, 0.1));
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .preco-secao label {
+            display: block;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .preco-valor {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--success-color);
+            margin: 0;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .badge-disponivel {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success-color);
+        }
+
+        .badge-lotado {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger-color);
+        }
+
+        .acoes {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .acoes a {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            border-radius: 6px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .acoes .btn-comprar {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .acoes .btn-comprar:hover:not(.desabilitado) {
+            background: darken(var(--success-color), 10%);
+        }
+
+        .acoes .btn-voltar {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .acoes .btn-voltar:hover {
+            background: #ccc;
+        }
+
+        .acoes .desabilitado {
+            background: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        @media (max-width: 768px) {
+            .detalhes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .evento-detalhes-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .preco-valor {
+                font-size: 2rem;
+            }
+
+            .stats-disponibilidade {
+                grid-template-columns: 1fr;
+            }
+
+            .acoes {
+                flex-direction: column;
+            }
+
+            .acoes a {
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">Ingressos Pro</a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/catalogo" class="active">Catalogo</a>
+                <a href="/login">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Cabeçalho -->
+        <div class="evento-detalhes-header">
+            <h1 th:text="${evento.nome}">Nome do Evento</h1>
+            <p th:text="${evento.getDataHoraFormatada()}">Data e Hora</p>
+        </div>
+
+        <!-- Status -->
+        <div>
+            <span th:if="${disponivel}" class="badge badge-disponivel">
+                <span th:text="${ingressosRestantes} + ' ingressos disponíveis'"></span>
+            </span>
+            <span th:if="!${disponivel}" class="badge badge-lotado">Evento Lotado</span>
+        </div>
+
+        <!-- Grid de Detalhes -->
+        <div class="detalhes-grid">
+            <!-- Coluna Principal -->
+            <div class="detalhes-principal">
+                <!-- Descrição -->
+                <div class="secao">
+                    <h2>Sobre o Evento</h2>
+                    <p th:text="${evento.descricao}">Descrição do evento</p>
+                </div>
+
+                <!-- Informações do Evento -->
+                <div class="secao">
+                    <h2>Informações</h2>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                        <div style="padding: 1rem; background: #f8f9fa; border-radius: 6px; border-left: 4px solid var(--primary-color);">
+                            <label style="display: block; font-weight: 600; color: #666; margin-bottom: 0.5rem;">Data</label>
+                            <p th:text="${evento.data}" style="margin: 0; font-size: 1.1rem;">Data do evento</p>
+                        </div>
+
+                        <div style="padding: 1rem; background: #f8f9fa; border-radius: 6px; border-left: 4px solid var(--primary-color);">
+                            <label style="display: block; font-weight: 600; color: #666; margin-bottom: 0.5rem;">Horário</label>
+                            <p th:text="${evento.horario}" style="margin: 0; font-size: 1.1rem;">Horário do evento</p>
+                        </div>
+
+                        <div style="padding: 1rem; background: #f8f9fa; border-radius: 6px; border-left: 4px solid var(--primary-color);">
+                            <label style="display: block; font-weight: 600; color: #666; margin-bottom: 0.5rem;">Local</label>
+                            <p th:text="${evento.local}" style="margin: 0; font-size: 1.1rem;">Local do evento</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Disponibilidade de Ingressos -->
+                <div class="secao" th:if="${disponivel or evento.getIngressosVendidos() > 0}">
+                    <h2>Disponibilidade de Ingressos</h2>
+                    <div class="disponibilidade">
+                        <div class="progresso-vendas">
+                            <div class="progresso-vendas-bar" 
+                                 th:style="'--percentual: ' + ${percentualVenda} + '%'"></div>
+                        </div>
+                        <div class="stats-disponibilidade">
+                            <div class="stat-item">
+                                <label>Disponíveis</label>
+                                <p th:text="${ingressosRestantes}">0</p>
+                            </div>
+                            <div class="stat-item">
+                                <label>Vendidos</label>
+                                <p th:text="${evento.getIngressosVendidos()}">0</p>
+                            </div>
+                            <div class="stat-item">
+                                <label>Total</label>
+                                <p th:text="${evento.getQuantidadeIngressosDisponiveis()}">0</p>
+                            </div>
+                            <div class="stat-item">
+                                <label>Percentual</label>
+                                <p th:text="${percentualVenda} + '%'">0%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coluna Lateral -->
+            <div class="detalhes-sidebar">
+                <!-- Card de Preço -->
+                <div class="info-card">
+                    <div class="preco-secao">
+                        <label>Valor do Ingresso</label>
+                        <p class="preco-valor">R$ <span th:text="${#numbers.formatDecimal(evento.valorIngresso, 1, 'COMMA', 2, 'POINT')}">0,00</span></p>
+                    </div>
+                </div>
+
+                <!-- Card de Status -->
+                <div class="info-card">
+                    <h3>Status</h3>
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                        <span th:if="${disponivel}" style="display: inline-block; width: 12px; height: 12px; background: var(--success-color); border-radius: 50%;"></span>
+                        <span th:if="!${disponivel}" style="display: inline-block; width: 12px; height: 12px; background: var(--danger-color); border-radius: 50%;"></span>
+                        <strong th:text="${disponivel ? 'Ingressos Disponíveis' : 'Evento Lotado'}"></strong>
+                    </div>
+                    <p style="margin: 0; color: #666; font-size: 0.9rem;">
+                        <span th:if="${disponivel}" th:text="'Restam ' + ${ingressosRestantes} + ' ingresso(s)'"></span>
+                        <span th:if="!${disponivel}">Todos os ingressos foram vendidos</span>
+                    </p>
+                </div>
+
+                <!-- Card de Vendas -->
+                <div class="info-card">
+                    <h3>Vendas</h3>
+                    <p>
+                        <strong th:text="${evento.getIngressosVendidos()}">0</strong> 
+                        de 
+                        <strong th:text="${evento.getQuantidadeIngressosDisponiveis()}">0</strong> 
+                        ingressos vendidos
+                    </p>
+                    <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.9rem;">
+                        <span th:text="${percentualVenda} + '% de ocupação'"></span>
+                    </p>
+                </div>
+
+                <!-- Ações -->
+                <div class="acoes">
+                    <a href="/catalogo" class="btn-voltar">Voltar</a>
+                    <a href="#" th:href="@{'/comprar/' + ${evento.id}}" 
+                       th:classappend="${!disponivel} ? 'desabilitado' : ''"
+                       class="btn-comprar" 
+                       th:text="${disponivel ? 'Comprar Ingresso' : 'Lotado'}"
+                       th:onclick="${!disponivel} ? 'return false;' : ''"></a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Copyright 2024 Sistema de Ingressos para Eventos - Todos os direitos reservados</p>
+        <p>Desenvolvido com  por <strong>Bruno</strong></p>
+    </footer>
+</body>
+</html>

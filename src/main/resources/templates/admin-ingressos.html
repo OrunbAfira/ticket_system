@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingressos do Evento - Admin</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav>
+    <div class="nav-container">
+        <a href="/" class="logo">Ingressos Pro</a>
+        <div class="nav-links">
+            <a href="/admin">Painel Admin</a>
+            <a href="/admin/validar">Validar QR</a>
+            <form action="/logout" method="post" style="display: inline;">
+                <button class="logout-btn" type="submit">Sair</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<main>
+    <div class="container">
+        <h1 th:text="'Ingressos - ' + ${evento.nome}">Ingressos</h1>
+
+        <p class="text-muted">
+            Data: <span th:text="${evento.getDataHoraFormatada()}"></span> · Local: <span th:text="${evento.local}"></span>
+        </p>
+
+        <div class="divider"></div>
+
+        <h2>Relatório simples</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Reservados</th>
+                <th>Confirmados (Pagos)</th>
+                <th>Utilizados</th>
+                <th>Cancelados</th>
+                <th>Disponíveis</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td th:text="${reservados}">0</td>
+                <td th:text="${pagos}">0</td>
+                <td th:text="${utilizados}">0</td>
+                <td th:text="${cancelados}">0</td>
+                <td th:text="${disponiveis}">0</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="divider"></div>
+
+        <h2>Ingressos emitidos</h2>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Cliente</th>
+                <th>Tipo</th>
+                <th>Estado</th>
+                <th>Hash (curto)</th>
+                <th>Ação</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="ingresso : ${ingressos}">
+                <td th:text="${ingresso.nomeCliente}"></td>
+                <td th:text="${ingresso.tipoIngresso}"></td>
+                <td th:text="${ingresso.estado}"></td>
+                <td style="font-family: 'Courier New', monospace; font-weight: 700;" th:text="${ingresso.hashIdCurto}"></td>
+                <td>
+                    <a class="btn" th:href="@{/admin/validar(hash=${ingresso.hashId})}">Validar</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="btn-group" style="margin-top: 2rem;">
+            <a href="/admin" class="btn btn-secondary">← Voltar</a>
+            <a href="/admin/validar" class="btn">Validar QR</a>
+        </div>
+
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2024 Sistema de Ingressos para Eventos</p>
+</footer>
+
+</body>
+</html>

@@ -2,51 +2,89 @@
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Lista de Ingressos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Ingressos - Sistema de Ingressos</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
-    <div class="container">
-
-        <h1>Ingressos Cadastrados</h1>
-
-        <div class="top-actions">
-            <a href="/ingressos/novo" class="btn">Comprar novo ingresso</a>
-            <a href="/" class="btn">Início</a>
+    <!-- NAVBAR -->
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">Ingressos Pro</a>
+            <div class="nav-links">
+                <a href="/eventos">Eventos</a>
+                <a href="/ingressos">Meus Ingressos</a>
+                <form action="/logout" method="post" style="display: inline;">
+                    <button class="logout-btn" type="submit">Sair</button>
+                </form>
+            </div>
         </div>
+    </nav>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Evento</th>
-                    <th>Cliente</th>
-                    <th>Tipo</th>
-                    <th>Valor Final</th>
-                    <th>Estado</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
+    <!-- MAIN -->
+    <main>
+        <div class="container">
+            <h1>Meus Ingressos</h1>
 
-            <tbody>
-                <tr th:each="ingresso : ${ingressos}">
-                    <td th:text="${ingresso.nomeEvento}"></td>
-                    <td th:text="${ingresso.nomeCliente}"></td>
-                    <td th:text="${ingresso.tipoIngresso}"></td>
-                    <td th:text="${'R$ ' + ingresso.valorFinal}"></td>
-                    <td th:text="${ingresso.estado}"></td>
-                    <td class="actions">
-                        <a th:href="@{/ingressos/{id}(id=${ingresso.id})}" class="btn">Detalhes</a>
-                        <a th:href="@{/ingressos/pagar/{id}(id=${ingresso.id})}" class="btn">Pagar</a>
-                        <a th:href="@{/ingressos/utilizar/{id}(id=${ingresso.id})}" class="btn">Utilizar</a>
-                        <a th:href="@{/ingressos/cancelar/{id}(id=${ingresso.id})}" class="btn">Cancelar</a>
-                        <a th:href="@{/ingressos/deletar/{id}(id=${ingresso.id})}" class="btn btn-danger">Excluir</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+            <p class="text-muted">Gerencie seus ingressos adquiridos e acompanhe o status de cada um.</p>
 
-    </div>
+            <div class="top-actions">
+                <a href="/eventos" class="btn btn-secondary">Comprar Novo Ingresso</a>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Evento</th>
+                        <th>Cliente</th>
+                        <th>Tipo</th>
+                        <th>Código Validação</th>
+                        <th>Valor Final</th>
+                        <th>Estado</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr th:each="ingresso : ${ingressos}">
+                        <td th:text="${ingresso.nomeEvento}"></td>
+                        <td th:text="${ingresso.nomeCliente}"></td>
+                        <td th:text="${ingresso.tipoIngresso}"></td>
+                        <td style="font-family: 'Courier New', monospace; font-size: 0.85rem; font-weight: bold; letter-spacing: 1px;" th:text="${ingresso.hashIdCurto}"></td>
+                        <td th:text="${'R$ ' + ingresso.valorFinal}"></td>
+                        <td>
+                            <span th:if="${ingresso.estado == 'RESERVADO'}" class="text-warning">Reservado</span>
+                            <span th:if="${ingresso.estado == 'PAGO'}" class="text-success">Pago</span>
+                            <span th:if="${ingresso.estado == 'UTILIZADO'}" class="text-muted">Utilizado</span>
+                            <span th:if="${ingresso.estado == 'CANCELADO'}" class="text-danger">Cancelado</span>
+                        </td>
+                        <td class="actions">
+                            <a th:href="@{/ingressos/{id}(id=${ingresso.id})}" class="btn">Detalhes</a>
+                            <a th:if="${ingresso.estado == 'RESERVADO'}" th:href="@{/ingressos/pagar/{id}(id=${ingresso.id})}" class="btn btn-success">Pagar</a>
+                            <a th:if="${ingresso.estado == 'PAGO'}" href="#" class="btn btn-success" style="opacity: 0.6; cursor: not-allowed;" onclick="return false;">Pago</a>
+                            <a th:if="${ingresso.estado != 'CANCELADO' and ingresso.estado != 'UTILIZADO'}" th:href="@{/ingressos/cancelar/{id}(id=${ingresso.id})}" class="btn btn-danger">Cancelar</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="divider"></div>
+
+            <div class="btn-group">
+                <a href="/eventos" class="btn">Ver Eventos</a>
+                <form action="/logout" method="post" style="display: inline;">
+                    <button class="btn btn-danger" type="submit">Sair</button>
+                </form>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2024 Sistema de Ingressos para Eventos</p>
+    </footer>
 
 </body>
 </html>

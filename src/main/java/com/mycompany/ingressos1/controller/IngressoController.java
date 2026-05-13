@@ -2,10 +2,12 @@ package com.mycompany.ingressos1.controller;
 
 import com.mycompany.ingressos1.model.Ingresso;
 import com.mycompany.ingressos1.service.IngressoService;
+import com.mycompany.ingressos1.service.UsuarioService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -13,9 +15,11 @@ import java.util.List;
 public class IngressoController {
 
     private final IngressoService ingressoService;
+    private final UsuarioService usuarioService;
 
-    public IngressoController(IngressoService ingressoService) {
+    public IngressoController(IngressoService ingressoService, UsuarioService usuarioService) {
         this.ingressoService = ingressoService;
+        this.usuarioService = usuarioService;
     }
 
     @GetMapping("/")
@@ -34,17 +38,35 @@ public class IngressoController {
 
     @PostMapping("/ingressos/salvar")
     public String salvarIngresso(@RequestParam String tipo,
-                                 @RequestParam String nomeEvento,
-                                 @RequestParam String nomeCliente,
-                                 @RequestParam String dataEvento,
-                                 @RequestParam double valorBase,
-                                 HttpSession session) {
+                                 @RequestParam String eventoId,
+                                 HttpSession session,
+                                 RedirectAttributes redirectAttributes) {
 
         if (session.getAttribute("usuarioLogado") == null) {
             return "redirect:/login";
         }
 
-        ingressoService.criarIngresso(tipo, nomeEvento, nomeCliente, dataEvento, valorBase);
+        String login = (String) session.getAttribute("usuarioLogado");
+        if (login == null) {
+            return "redirect:/login";
+        }
+
+        if (eventoId == null || eventoId.isBlank()) {
+            return "redirect:/eventos?erro=Evento inválido";
+        }
+
+        try {
+            usuarioService.buscarPorLogin(login)
+                .ifPresentOrElse(
+                    usuario -> ingressoService.reservarIngressoParaEvento(tipo, eventoId, usuario),
+                    () -> {
+                        throw new IllegalStateException("Usuário não encontrado na sessão");
+                    }
+                );
+        } catch (IllegalStateException e) {
+            redirectAttributes.addAttribute("erro", e.getMessage());
+            return "redirect:/comprar/" + eventoId;
+        }
 
         return "redirect:/ingressos";
     }
@@ -58,13 +80,14 @@ public class IngressoController {
 
         String perfil = (String) session.getAttribute("perfilUsuario");
         String nomeUsuario = (String) session.getAttribute("nomeUsuario");
+        String login = (String) session.getAttribute("usuarioLogado");
 
         List<Ingresso> ingressos;
 
         if ("ADMIN".equals(perfil)) {
             ingressos = ingressoService.listarTodos();
         } else {
-            ingressos = ingressoService.listarPorCliente(nomeUsuario);
+            ingressos = ingressoService.listarPorLogin(login, nomeUsuario);
         }
 
         model.addAttribute("ingressos", ingressos);
@@ -109,6 +132,11 @@ public class IngressoController {
             return "redirect:/login";
         }
 
+        String perfil = (String) session.getAttribute("perfilUsuario");
+        if (!"ADMIN".equals(perfil)) {
+            return "redirect:/ingressos?erro=Ação permitida apenas para administrador";
+        }
+
         ingressoService.utilizarIngresso(id);
         return "redirect:/ingressos";
     }
@@ -117,6 +145,11 @@ public class IngressoController {
     public String deletarIngresso(@PathVariable String id, HttpSession session) {
         if (session.getAttribute("usuarioLogado") == null) {
             return "redirect:/login";
+        }
+
+        String perfil = (String) session.getAttribute("perfilUsuario");
+        if (!"ADMIN".equals(perfil)) {
+            return "redirect:/ingressos?erro=Ação permitida apenas para administrador";
         }
 
         ingressoService.deletar(id);
